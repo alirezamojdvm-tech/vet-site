@@ -3,16 +3,102 @@
 
 const fullName = "علیرضا محمّدی جعفری";
 const role = "دامپزشک و مشاور ایمنی غذایی";
-const phone = "۰۹۰۲۵۴۷۲۹۲۹";
+const phoneDisplay = "۰۹۱۲۴۹۱۷۸۲۲";
+const phoneRaw = "09124917822";
+const telLink = "tel:+989124917822";
 const email = "amojdvm@iran.ir";
+const mailLink = `mailto:${email}`;
+const siteUrl = "https://vet.hsc-co.ir";
+// ✅ تغییر یافته: FormSubmit به جای Formspree
+const formEndpoint = "https://formsubmit.co/el/rajuca";
+const currentYear = new Date().getFullYear();
 
 const pageData = {
   title: "پرسش و پاسخ دامپزشکی | مشاوره آنلاین و تلفنی رایگان",
   description: "پرسش و پاسخ دامپزشکی. مشاوره آنلاین و تلفنی رایگان با دکتر جعفری دامپزشک در ورامین. پاسخ به سوالات شما درباره حیوانات خانگی.",
   keywords: "پرسش و پاسخ دامپزشکی, مشاوره دامپزشکی, دامپزشک آنلاین, مشاوره رایگان پرنده, سوالات دامپزشکی, مشاور عروس هلندی",
-  canonical: "https://vet.hsc-co.ir/vet-qa",
+  canonical: `${siteUrl}/vet-qa`,
+  ogImage: `${siteUrl}/og/vet-qa.jpg`,
   heroBadge: "❓ پرسش و پاسخ دامپزشکی",
   heroTitle: "پرسش و پاسخ دامپزشکی",
+};
+
+// FAQ — یک منبع واحد برای نمایش و Schema
+const faqs = [
+  {
+    q: "آیا موی گربه باعث نازایی می‌شود؟",
+    a: "خیر، موی گربه به خودی خود باعث نازایی نمی‌شود. تنها بیماری توکسوپلاسموز که از طریق مدفوع گربه منتقل می‌شود، در دوران بارداری خطرناک است. با رعایت بهداشت، خطر بسیار کم است.",
+  },
+  {
+    q: "چه غذایی به گربه بدهم؟",
+    a: "بهترین غذا برای گربه، غذای خشک و مرطوب مخصوص گربه با کیفیت بالا است. غذای انسانی مانند مرغ پخته، ماهی بدون استخوان و سبزیجات مجاز نیز می‌تواند به عنوان مکمل استفاده شود.",
+  },
+  {
+    q: "چرا گربه من دستشویی نمی‌کند؟",
+    a: "دلایل مختلفی می‌تواند داشته باشد: استرس، تغییر محیط، بیماری (مانند عفونت ادراری یا سنگ کلیه)، یا مشکل در جعبه خاک. در صورت تداوم، به دامپزشک مراجعه کنید.",
+  },
+  {
+    q: "چند بار در روز باید به سگ غذا داد؟",
+    a: "توله سگ‌ها ۳-۴ بار در روز، سگ‌های بالغ ۲ بار در روز، و سگ‌های مسن ۲ بار در روز با غذای مناسب سنشان.",
+  },
+  {
+    q: "آیا عروس هلندی می‌تواند حمام کند؟",
+    a: "بله، عروس هلندی می‌تواند حمام کند. بهترین روش، اسپری آب ولرم با اسپری مخصوص یا ظرف آب کم‌عمق است. هرگز از شامپوی انسانی استفاده نکنید.",
+  },
+  {
+    q: "هزینه عقیم‌سازی گربه ماده چقدر است؟",
+    a: "هزینه عقیم‌سازی گربه ماده بسته به وزن، سن و شرایط متفاوت است. برای اطلاع دقیق با شماره ۰۹۱۲۴۹۱۷۸۲۲ تماس بگیرید.",
+  },
+  {
+    q: "چگونه بفهمم گربه من تب دارد؟",
+    a: "علائم تب در گربه: بی‌حالی، بی‌اشتهایی، گوش‌های گرم، تنفس سریع، لرزش. برای تشخیص دقیق، از دامپزشک کمک بگیرید.",
+  },
+  {
+    q: "آیا می‌توانم خرگوش را حمام کنم؟",
+    a: "بهتر است خرگوش را حمام نکنید. در صورت لزوم، با دستمال مرطوب تمیز کنید. حمام کردن می‌تواند باعث استرس و سرماخوردگی خرگوش شود.",
+  },
+];
+
+// JSON-LD: FAQPage
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+// JSON-LD: VeterinaryCare (LocalBusiness)
+const businessSchema = {
+  "@context": "https://schema.org",
+  "@type": "VeterinaryCare",
+  name: `دکتر ${fullName}`,
+  description: pageData.description,
+  url: pageData.canonical,
+  telephone: `+98${phoneRaw.slice(1)}`,
+  email,
+  image: pageData.ogImage,
+  priceRange: "$$",
+  areaServed: ["ورامین", "پیشوا", "قرچک", "پاکدشت"],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "ورامین",
+    addressRegion: "تهران",
+    addressCountry: "IR",
+  },
+};
+
+// JSON-LD: Person
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: fullName,
+  jobTitle: role,
+  telephone: `+98${phoneRaw.slice(1)}`,
+  email,
+  url: pageData.canonical,
 };
 ---
 
@@ -25,16 +111,40 @@ const pageData = {
     <meta name="description" content={pageData.description} />
     <meta name="keywords" content={pageData.keywords} />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={pageData.canonical} />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={pageData.title} />
     <meta property="og:description" content={pageData.description} />
     <meta property="og:url" content={pageData.canonical} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fa_IR" />
-    <link rel="canonical" href={pageData.canonical} />
+    <meta property="og:site_name" content={`دکتر ${fullName}`} />
+    <meta property="og:image" content={pageData.ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageData.title} />
+    <meta name="twitter:description" content={pageData.description} />
+    <meta name="twitter:image" content={pageData.ogImage} />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#0a4a6c" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       :root {
@@ -92,125 +202,58 @@ const pageData = {
         gap: 16px;
         padding: 20px 28px;
       }
-      .logo-area {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
+      .logo-area { display: flex; align-items: center; gap: 14px; }
       .logo-icon {
-        width: 52px;
-        height: 52px;
+        width: 52px; height: 52px;
         background: linear-gradient(145deg, var(--primary) 0%, var(--primary-mid) 100%);
         border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        color: #fff;
-        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; color: #fff; flex-shrink: 0;
         box-shadow: 0 6px 18px rgba(10,74,108,0.25);
       }
-      .logo-text {
-        font-size: 19px;
-        font-weight: 800;
-        color: var(--primary);
-        letter-spacing: -0.3px;
-      }
-      .contact-badge {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        font-size: 14px;
-        color: var(--text-mid);
-      }
+      .logo-text { font-size: 19px; font-weight: 800; color: var(--primary); letter-spacing: -0.3px; }
+      .contact-badge { display: flex; align-items: center; gap: 18px; font-size: 14px; color: var(--text-mid); }
       .contact-badge a {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 700;
-        transition: var(--transition);
-        padding: 6px 12px;
-        border-radius: 10px;
+        color: var(--primary); text-decoration: none; font-weight: 700;
+        transition: var(--transition); padding: 6px 12px; border-radius: 10px;
       }
-      .contact-badge a:hover {
-        background: var(--primary-light);
-        color: var(--primary-dark);
-      }
+      .contact-badge a:hover { background: var(--primary-light); color: var(--primary-dark); }
       .hero {
-        text-align: center;
-        position: relative;
-        overflow: hidden;
+        text-align: center; position: relative; overflow: hidden;
         padding: 48px 40px;
         background: linear-gradient(180deg, #ffffff 0%, #f8fcff 100%);
       }
       .hero .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: var(--gold-bg);
-        color: #9a7b0a;
+        display: inline-flex; align-items: center; gap: 6px;
+        background: var(--gold-bg); color: #9a7b0a;
         border: 1px solid #f5e6a3;
-        padding: 7px 22px;
-        border-radius: 40px;
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 20px;
+        padding: 7px 22px; border-radius: 40px;
+        font-size: 13px; font-weight: 700; margin-bottom: 20px;
         box-shadow: 0 2px 10px rgba(241,196,15,0.15);
       }
       .hero h1 {
-        font-size: 34px;
-        font-weight: 900;
-        color: var(--text);
-        line-height: 1.4;
-        margin-bottom: 12px;
-        position: relative;
-        z-index: 1;
+        font-size: 34px; font-weight: 900; color: var(--text);
+        line-height: 1.4; margin-bottom: 12px;
+        position: relative; z-index: 1;
       }
-      .hero h1 .highlight {
-        color: var(--primary);
-        position: relative;
-      }
+      .hero h1 .highlight { color: var(--primary); position: relative; }
       .hero h1 .highlight::after {
-        content: '';
-        position: absolute;
-        bottom: 3px;
-        right: 0;
-        left: 0;
+        content: ''; position: absolute; bottom: 3px; right: 0; left: 0;
         height: 5px;
         background: linear-gradient(90deg, var(--gold), #f39c12);
-        border-radius: 3px;
-        opacity: 0.85;
+        border-radius: 3px; opacity: 0.85;
       }
-      .hero p {
-        font-size:17px;
-        color:var(--text-mid);
-        max-width:650px;
-        margin:0 auto;
-        line-height:2;
-      }
+      .hero p { font-size: 17px; color: var(--text-mid); max-width: 650px; margin: 0 auto; line-height: 2; }
       .cta-group {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 14px;
-        position: relative;
-        z-index: 1;
-        margin-top: 20px;
+        display: flex; justify-content: center; flex-wrap: wrap; gap: 14px;
+        position: relative; z-index: 1; margin-top: 20px;
       }
       .btn-primary {
         background: linear-gradient(145deg, var(--primary) 0%, var(--primary-mid) 100%);
-        color: #fff;
-        padding: 15px 38px;
-        border: none;
-        border-radius: var(--r-pill);
-        font-size: 17px;
-        font-weight: 700;
-        font-family: inherit;
-        cursor: pointer;
-        transition: var(--transition);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        color: #fff; padding: 15px 38px; border: none; border-radius: var(--r-pill);
+        font-size: 17px; font-weight: 700; font-family: inherit; cursor: pointer;
+        transition: var(--transition); text-decoration: none;
+        display: inline-flex; align-items: center; gap: 8px;
         box-shadow: 0 8px 24px rgba(10,74,108,.28);
       }
       .btn-primary:hover {
@@ -220,19 +263,10 @@ const pageData = {
       }
       .btn-secondary {
         background: linear-gradient(145deg, var(--secondary) 0%, var(--secondary-dark) 100%);
-        color: #fff;
-        padding: 15px 38px;
-        border: none;
-        border-radius: var(--r-pill);
-        font-size: 17px;
-        font-weight: 700;
-        font-family: inherit;
-        cursor: pointer;
-        transition: var(--transition);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        color: #fff; padding: 15px 38px; border: none; border-radius: var(--r-pill);
+        font-size: 17px; font-weight: 700; font-family: inherit; cursor: pointer;
+        transition: var(--transition); text-decoration: none;
+        display: inline-flex; align-items: center; gap: 8px;
         box-shadow: 0 8px 24px rgba(46,204,113,.28);
       }
       .btn-secondary:hover {
@@ -241,314 +275,148 @@ const pageData = {
         box-shadow: 0 12px 32px rgba(46,204,113,.38);
       }
       .section-label {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--text-muted);
-        letter-spacing: 0.6px;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        font-size: 12px; font-weight: 700; color: var(--text-muted);
+        letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 16px;
+        display: flex; align-items: center; gap: 12px;
       }
       .section-label::after {
-        content: '';
-        flex: 1;
-        height: 1px;
+        content: ''; flex: 1; height: 1px;
         background: linear-gradient(90deg, var(--primary-light), transparent);
       }
-      .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
-      .grid-3 {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 16px;
-      }
-      .card-item {
-        background: var(--primary-light);
-        border-radius: 18px;
-        padding: 24px 20px;
-        transition: var(--transition);
-        border-right: 4px solid var(--primary);
-      }
-      .card-item:hover {
-        background: linear-gradient(160deg, var(--primary) 0%, var(--primary-mid) 100%);
-        color: #fff;
-        transform: translateY(-4px);
-        box-shadow: 0 12px 28px rgba(10,74,108,.22);
-      }
-      .card-item .icon {
-        font-size: 32px;
-        display: block;
-        margin-bottom: 8px;
-      }
-      .card-item h3 {
-        font-size: 16px;
-        margin-bottom: 6px;
-      }
-      .card-item p {
-        font-size: 14px;
-        opacity: 0.85;
-        line-height: 1.6;
-      }
-      .card-item:hover h3,
-      .card-item:hover p { color: #fff; }
-      .gold-box {
-        background: var(--gold-bg);
-        border-radius: 20px;
-        padding: 28px 30px;
-        border-right: 5px solid var(--gold);
-        margin: 16px 0;
-      }
-      .gold-box h3 {
-        color: var(--primary);
-        font-size: 18px;
-        margin-bottom: 12px;
-      }
-      .gold-box ul {
-        list-style: none;
-        padding: 0;
-      }
-      .gold-box ul li {
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(10,74,108,0.06);
-        font-size: 14.5px;
-        padding-right: 28px;
-        position: relative;
-      }
-      .gold-box ul li::before {
-        content: "✓";
-        color: var(--secondary);
-        font-weight: 700;
-        position: absolute;
-        right: 0;
-      }
-      .gold-box ul li:last-child {
-        border-bottom: none;
-      }
-      .danger-box {
-        background: #f8d7da;
-        border-radius: 16px;
-        padding: 20px 24px;
-        border-right: 5px solid #dc3545;
-        margin: 16px 0;
-      }
-      .danger-box h4 {
-        color: #721c24;
-        font-size: 16px;
-        margin: 0 0 6px 0;
-      }
-      .danger-box p {
-        font-size: 14px;
-        color: #721c24;
-        line-height: 1.6;
-        margin: 0;
-      }
+      .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
       .step-box {
-        background: white;
-        border-radius: 16px;
-        padding: 20px 24px;
+        background: white; border-radius: 16px; padding: 20px 24px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        text-align: center;
-        border: 1px solid var(--primary-light);
+        text-align: center; border: 1px solid var(--primary-light);
       }
       .step-box .num {
-        background: var(--primary);
-        color: white;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 10px auto;
-        font-weight: 700;
-        font-size: 16px;
+        background: var(--primary); color: white;
+        width: 36px; height: 36px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 10px auto; font-weight: 700; font-size: 16px;
       }
-      .step-box h4 {
-        font-size: 15px;
-        color: var(--text);
-        margin-bottom: 4px;
-      }
-      .step-box p {
-        font-size: 13px;
-        color: var(--text-mid);
-        line-height: 1.6;
-        margin: 0;
-      }
+      .step-box h4 { font-size: 15px; color: var(--text); margin-bottom: 4px; }
+      .step-box p { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin: 0; }
+
+      /* FAQ accordion */
       .faq-item {
         background: var(--bg);
         border-radius: 12px;
-        padding: 16px 20px;
         margin-bottom: 12px;
+        border: 1px solid rgba(10, 74, 108, 0.06);
+        overflow: hidden;
+        transition: var(--transition);
       }
-      .faq-item strong {
+      .faq-item[open] { border-color: rgba(10,74,108,0.18); box-shadow: 0 4px 16px rgba(10,74,108,0.08); }
+      .faq-item summary {
+        padding: 16px 20px;
+        cursor: pointer;
+        font-weight: 700;
         color: var(--primary);
+        font-size: 14.5px;
+        list-style: none;
+        position: relative;
+        padding-left: 44px;
       }
-      .faq-item p {
+      .faq-item summary::-webkit-details-marker { display: none; }
+      .faq-item summary::after {
+        content: '+';
+        position: absolute;
+        left: 18px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px; font-weight: 400;
+        color: var(--primary-mid);
+        transition: var(--transition);
+      }
+      .faq-item[open] summary::after { content: '−'; }
+      .faq-item .answer {
+        padding: 0 20px 16px 20px;
         font-size: 14px;
         color: var(--text-mid);
-        margin: 4px 0 0 0;
+        line-height: 1.8;
       }
+
       .footer {
-        text-align: center;
-        font-size: 13.5px;
-        color: var(--text-muted);
+        text-align: center; font-size: 13.5px; color: var(--text-muted);
         border-top: 1px solid var(--primary-light);
-        padding-top: 24px;
-        margin-top: 4px;
+        padding-top: 24px; margin-top: 4px;
       }
-      .footer a {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 600;
-      }
+      .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
       .footer .socials {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-bottom: 14px;
-        flex-wrap: wrap;
+        display: flex; justify-content: center; gap: 12px;
+        margin-bottom: 14px; flex-wrap: wrap;
       }
       .footer .socials a {
-        font-size: 13.5px;
-        padding: 7px 16px;
-        border-radius: 24px;
-        background: var(--primary-light);
-        color: var(--primary);
-        transition: var(--transition);
-        font-weight: 600;
+        font-size: 13.5px; padding: 7px 16px; border-radius: 24px;
+        background: var(--primary-light); color: var(--primary);
+        transition: var(--transition); font-weight: 600;
       }
       .footer .socials a:hover {
-        background: var(--primary);
-        color: #fff;
-        transform: translateY(-2px);
+        background: var(--primary); color: #fff; transform: translateY(-2px);
       }
       .fab-call {
-        position: fixed;
-        bottom: 28px;
-        left: 28px;
-        width: 60px;
-        height: 60px;
+        position: fixed; bottom: 28px; left: 28px;
+        width: 60px; height: 60px;
         background: linear-gradient(145deg, var(--secondary) 0%, var(--secondary-dark) 100%);
-        color: #fff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        color: #fff; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
         font-size: 26px;
         box-shadow: 0 8px 28px rgba(46,204,113,0.4);
-        text-decoration: none;
-        z-index: 100;
+        text-decoration: none; z-index: 100;
         transition: var(--transition);
         animation: pulse 2.5s infinite;
       }
-      .fab-call:hover {
-        transform: scale(1.1);
-        box-shadow: 0 12px 36px rgba(46,204,113,0.5);
-      }
+      .fab-call:hover { transform: scale(1.1); box-shadow: 0 12px 36px rgba(46,204,113,0.5); }
       @keyframes pulse {
         0%, 100% { box-shadow: 0 8px 28px rgba(46,204,113,0.4); }
         50% { box-shadow: 0 8px 28px rgba(46,204,113,0.4), 0 0 0 14px rgba(46,204,113,0.15); }
       }
-      .form-group {
-        margin-bottom: 16px;
-      }
+      .form-group { margin-bottom: 16px; }
       .form-group label {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: rgba(255,255,255,0.9);
-        margin-bottom: 6px;
+        display: block; font-size: 13px; font-weight: 600;
+        color: rgba(255,255,255,0.9); margin-bottom: 6px;
       }
-      .form-group input,
-      .form-group select,
-      .form-group textarea {
-        width: 100%;
-        padding: 14px 18px;
-        border: none;
-        border-radius: 14px;
-        font-size: 15px;
-        font-family: inherit;
-        background: rgba(255,255,255,0.95);
-        color: var(--text);
+      .form-group input, .form-group select, .form-group textarea {
+        width: 100%; padding: 14px 18px; border: none; border-radius: 14px;
+        font-size: 15px; font-family: inherit;
+        background: rgba(255,255,255,0.95); color: var(--text);
         transition: var(--transition);
       }
-      .form-group input:focus,
-      .form-group textarea:focus {
-        outline: none;
-        background: #fff;
+      .form-group input:focus, .form-group textarea:focus {
+        outline: none; background: #fff;
         box-shadow: 0 0 0 4px rgba(255,255,255,0.3);
       }
-      .form-group textarea {
-        resize: vertical;
-        min-height: 90px;
-      }
+      .form-group textarea { resize: vertical; min-height: 90px; }
       .btn-submit {
-        width: 100%;
-        padding: 16px;
+        width: 100%; padding: 16px;
         background: linear-gradient(145deg, var(--secondary) 0%, var(--secondary-dark) 100%);
-        color: #fff;
-        border: none;
-        border-radius: var(--r-pill);
-        font-size: 17px;
-        font-weight: 700;
-        font-family: inherit;
-        cursor: pointer;
-        transition: var(--transition);
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
+        color: #fff; border: none; border-radius: var(--r-pill);
+        font-size: 17px; font-weight: 700; font-family: inherit; cursor: pointer;
+        transition: var(--transition); margin-top: 8px;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
         box-shadow: 0 6px 20px rgba(46,204,113,0.3);
       }
-      .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 28px rgba(46,204,113,.4);
-      }
-      .btn-submit:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-        transform: none;
-      }
+      .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(46,204,113,.4); }
+      .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
       .form-status {
-        display: none;
-        margin-top: 16px;
-        padding: 14px 18px;
-        border-radius: 14px;
-        font-size: 14.5px;
-        font-weight: 500;
-        text-align: center;
-        background: rgba(255,255,255,0.15);
-        color: #fff;
+        display: none; margin-top: 16px; padding: 14px 18px;
+        border-radius: 14px; font-size: 14.5px; font-weight: 500;
+        text-align: center; background: rgba(255,255,255,0.15); color: #fff;
       }
-      .form-status.success {
-        display: block;
-        background: rgba(46,204,113,0.3);
-        color: #d5f5e3;
-      }
-      .form-status.error {
-        display: block;
-        background: rgba(231,76,60,0.3);
-        color: #fadbd8;
-      }
+      .form-status.success { display: block; background: rgba(46,204,113,0.3); color: #d5f5e3; }
+      .form-status.error { display: block; background: rgba(231,76,60,0.3); color: #fadbd8; }
+
       @media (max-width: 700px) {
         body { padding: 14px; }
         .card { padding: 20px 16px; }
         .hero { padding: 28px 16px; }
         .hero h1 { font-size: 24px; }
-        .grid-2 { grid-template-columns: 1fr; }
         .grid-3 { grid-template-columns: 1fr; }
         .header { flex-direction: column; text-align: center; }
         .logo-area { justify-content: center; }
         .contact-badge { justify-content: center; flex-wrap: wrap; }
         .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
         .fab-call { bottom: 20px; left: 20px; width: 56px; height: 56px; font-size: 22px; }
-        .gold-box { padding: 20px 18px; }
       }
       @media (max-width: 450px) {
         .hero h1 { font-size: 20px; }
@@ -565,8 +433,8 @@ const pageData = {
           <span class="logo-text">{fullName}</span>
         </div>
         <div class="contact-badge">
-          <span>📞 <a href={`tel:${phone}`}>{phone}</a></span>
-          <span>✉️ <a href={`mailto:${email}`}>{email}</a></span>
+          <span>📞 <a href={telLink} aria-label="تماس با دکتر">{phoneDisplay}</a></span>
+          <span>✉️ <a href={mailLink} aria-label="ارسال ایمیل">{email}</a></span>
         </div>
       </header>
 
@@ -578,11 +446,11 @@ const pageData = {
           مشاوره آنلاین و تلفنی رایگان
         </h1>
         <p>
-          دکتر جعفری پاسخگوی سوالات شما درباره <strong>حیوانات خانگی، پرندگان و دام</strong> است. 
+          دکتر جعفری پاسخگوی سوالات شما درباره <strong>حیوانات خانگی، پرندگان و دام</strong> است.
           مشاوره رایگان و تخصصی در اسرع وقت.
         </p>
         <div class="cta-group">
-          <a href="tel:09025472929" class="btn-primary">📞 مشاوره تلفنی</a>
+          <a href={telLink} class="btn-primary">📞 مشاوره تلفنی</a>
           <a href="#consult" class="btn-secondary">📋 ارسال سوال</a>
         </div>
       </section>
@@ -590,46 +458,12 @@ const pageData = {
       <!-- سوالات متداول -->
       <section class="card">
         <div class="section-label">❓ سوالات متداول کاربران</div>
-        
-        <div class="faq-item">
-          <strong>سوال: آیا موی گربه باعث نازایی می‌شود؟</strong>
-          <p>خیر، موی گربه به خودی خود باعث نازایی نمی‌شود. تنها بیماری توکسوپلاسموز که از طریق مدفوع گربه منتقل می‌شود، در دوران بارداری خطرناک است. با رعایت بهداشت، خطر بسیار کم است.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: چه غذایی به گربه بدهم؟</strong>
-          <p>بهترین غذا برای گربه، غذای خشک و مرطوب مخصوص گربه با کیفیت بالا است. غذای انسانی مانند مرغ پخته، ماهی بدون استخوان و سبزیجات مجاز نیز می‌تواند به عنوان مکمل استفاده شود.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: چرا گربه من دستشویی نمی‌کند؟</strong>
-          <p>دلایل مختلفی می‌تواند داشته باشد: استرس، تغییر محیط، بیماری (مانند عفونت ادراری یا سنگ کلیه)، یا مشکل در جعبه خاک. در صورت تداوم، به دامپزشک مراجعه کنید.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: چند بار در روز باید به سگ غذا داد؟</strong>
-          <p>توله سگ‌ها ۳-۴ بار در روز، سگ‌های بالغ ۲ بار در روز، و سگ‌های مسن ۲ بار در روز با غذای مناسب سنشان.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: آیا عروس هلندی می‌تواند حمام کند؟</strong>
-          <p>بله، عروس هلندی می‌تواند حمام کند. بهترین روش، اسپری آب ولرم با اسپری مخصوص یا ظرف آب کم‌عمق است. هرگز از شامپوی انسانی استفاده نکنید.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: هزینه عقیم‌سازی گربه ماده چقدر است؟</strong>
-          <p>هزینه عقیم‌سازی گربه ماده بسته به وزن، سن و شرایط متفاوت است. برای اطلاع دقیق با شماره ۰۹۰۲۵۴۷۲۹۲۹ تماس بگیرید.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: چگونه بفهمم گربه من تب دارد؟</strong>
-          <p>علائم تب در گربه: بی‌حالی، بی‌اشتهایی، گوش‌های گرم، تنفس سریع، لرزش. برای تشخیص دقیق، از دامپزشک کمک بگیرید.</p>
-        </div>
-        
-        <div class="faq-item">
-          <strong>سوال: آیا می‌توانم خرگوش را حمام کنم؟</strong>
-          <p>بهتر است خرگوش را حمام نکنید. در صورت لزوم، با دستمال مرطوب تمیز کنید. حمام کردن می‌تواند باعث استرس و سرماخوردگی خرگوش شود.</p>
-        </div>
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary>{f.q}</summary>
+            <div class="answer">{f.a}</div>
+          </details>
+        ))}
       </section>
 
       <!-- راه‌های ارتباطی -->
@@ -639,7 +473,7 @@ const pageData = {
           <div class="step-box">
             <div class="num">۱</div>
             <h4>تماس تلفنی</h4>
-            <p>با شماره <strong>۰۹۰۲۵۴۷۲۹۲۹</strong> تماس بگیرید</p>
+            <p>با شماره <strong>{phoneDisplay}</strong> تماس بگیرید</p>
           </div>
           <div class="step-box">
             <div class="num">۲</div>
@@ -658,18 +492,26 @@ const pageData = {
       <section class="card" id="consult" style="background:linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%); color:#fff;">
         <h2 style="font-size:22px; font-weight:800; margin:0 0 6px 0;">📋 ارسال سوال دامپزشکی</h2>
         <p style="font-size:14.5px; opacity:0.88; margin-bottom:22px;">سوال خود را بپرسید تا در اسرع وقت پاسخ دهید.</p>
-        <form id="consult-form" action="https://formspree.io/f/meeywgdl" method="POST">
+        <form id="consult-form" action={formEndpoint} method="POST" novalidate>
+          <!-- ✅ فیلدهای مخفی FormSubmit -->
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_subject" value="سوال جدید دامپزشکی از سایت" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_language" value="fa" />
+
           <div class="form-group">
-            <label>نام و نام خانوادگی</label>
-            <input type="text" name="name" placeholder="نام خود را وارد کنید" required />
+            <label for="f-name">نام و نام خانوادگی</label>
+            <input id="f-name" type="text" name="name" placeholder="نام خود را وارد کنید" required />
           </div>
           <div class="form-group">
-            <label>شماره تماس</label>
-            <input type="tel" name="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required />
+            <label for="f-phone">شماره تماس</label>
+            <input id="f-phone" type="tel" name="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                   pattern="^0?9\d{9}$" inputmode="numeric" required />
           </div>
           <div class="form-group">
-            <label>شهر شما</label>
-            <select name="city">
+            <label for="f-city">شهر شما</label>
+            <select id="f-city" name="city" required>
+              <option value="">انتخاب کنید...</option>
               <option value="ورامین">ورامین</option>
               <option value="پیشوا">پیشوا</option>
               <option value="قرچک">قرچک</option>
@@ -678,8 +520,9 @@ const pageData = {
             </select>
           </div>
           <div class="form-group">
-            <label>نوع حیوان</label>
-            <select name="animal_type">
+            <label for="f-animal">نوع حیوان</label>
+            <select id="f-animal" name="animal_type" required>
+              <option value="">انتخاب کنید...</option>
               <option value="سگ">سگ</option>
               <option value="گربه">گربه</option>
               <option value="پرنده">پرنده</option>
@@ -690,13 +533,13 @@ const pageData = {
             </select>
           </div>
           <div class="form-group">
-            <label>سوال شما</label>
-            <textarea name="message" placeholder="سوال خود را بنویسید..." required></textarea>
+            <label for="f-message">سوال شما</label>
+            <textarea id="f-message" name="message" placeholder="سوال خود را بنویسید..." required></textarea>
           </div>
-          <input type="text" name="_gotcha" style="display:none !important;" />
+          <input type="text" name="_gotcha" style="display:none !important;" tabindex="-1" autocomplete="off" />
           <button type="submit" class="btn-submit">🚀 ارسال سوال</button>
         </form>
-        <div id="form-status" class="form-status"></div>
+        <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
       </section>
 
       <!-- FOOTER -->
@@ -707,22 +550,44 @@ const pageData = {
           <a href="https://www.instagram.com/alireza.insurance/" target="_blank" rel="noopener">اینستاگرام</a>
           <a href="https://rubika.ir/Alirezainsurance" target="_blank" rel="noopener">روبیکا</a>
         </div>
-        <p>📞 <a href={`tel:${phone}`}>{phone}</a> &nbsp;|&nbsp; ✉️ <a href={`mailto:${email}`}>{email}</a></p>
+        <p>📞 <a href={telLink}>{phoneDisplay}</a> &nbsp;|&nbsp; ✉️ <a href={mailLink}>{email}</a></p>
         <p style="margin-top:6px; font-size:13px;">پرسش و پاسخ دامپزشکی | مشاوره آنلاین و تلفنی رایگان</p>
-        <p style="margin-top:8px; font-size:12.5px; opacity:0.7;">© {new Date().getFullYear()} دکتر {fullName} — تمامی حقوق محفوظ است</p>
+        <p style="margin-top:8px; font-size:12.5px; opacity:0.7;">© {currentYear} دکتر {fullName} — تمامی حقوق محفوظ است</p>
       </footer>
     </div>
 
     <!-- Floating Call Button -->
-    <a href={`tel:${phone}`} class="fab-call" aria-label="تماس فوری با دکتر">📞</a>
+    <a href={telLink} class="fab-call" aria-label="تماس فوری با دکتر">📞</a>
 
     <script>
       const form = document.getElementById('consult-form');
       const statusDiv = document.getElementById('form-status');
       const btn = document.querySelector('.btn-submit');
 
-      form.addEventListener('submit', async function(e) {
+      // نرمال‌سازی ارقام فارسی/عربی به لاتین
+      function normalizeDigits(s) {
+        return s
+          .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+          .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+      }
+
+      const phoneInput = document.getElementById('f-phone');
+      phoneInput.addEventListener('input', (e) => {
+        e.target.value = normalizeDigits(e.target.value).replace(/[^\d]/g, '');
+      });
+
+      form.addEventListener('submit', async function (e) {
         e.preventDefault();
+
+        // اعتبارسنجی سمت کلاینت
+        const phone = normalizeDigits(phoneInput.value).trim();
+        if (!/^0?9\d{9}$/.test(phone)) {
+          statusDiv.className = 'form-status error';
+          statusDiv.textContent = '❌ لطفاً یک شماره موبایل معتبر (مثل ۰۹۱۲۳۴۵۶۷۸۹) وارد کنید.';
+          phoneInput.focus();
+          return;
+        }
+
         const originalText = btn.innerHTML;
         btn.innerHTML = '⏳ در حال ارسال...';
         btn.disabled = true;
@@ -732,16 +597,24 @@ const pageData = {
         try {
           const res = await fetch(form.action, {
             method: 'POST',
-            headers: { 'Accept': 'application/json' },
+            headers: { Accept: 'application/json' },
             body: new FormData(form),
           });
-          if (res.ok) {
+
+          // FormSubmit در حالت AJAX پاسخ JSON برمی‌گرداند
+          const data = await res.json().catch(() => ({}));
+
+          if (res.ok && data.success !== false) {
             statusDiv.className = 'form-status success';
             statusDiv.textContent = '✅ سوال شما با موفقیت ارسال شد! به‌زودی پاسخ داده می‌شود.';
             btn.innerHTML = '✅ ارسال شد!';
             form.reset();
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.disabled = false;
+            }, 4000);
           } else {
-            throw new Error('خطا در ارسال');
+            throw new Error(data.message || 'خطا در ارسال');
           }
         } catch {
           statusDiv.className = 'form-status error';
