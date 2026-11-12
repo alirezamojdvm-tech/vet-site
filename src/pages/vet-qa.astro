@@ -9,8 +9,9 @@ const telLink = "tel:+989124917822";
 const email = "amojdvm@iran.ir";
 const mailLink = `mailto:${email}`;
 const siteUrl = "https://vet.hsc-co.ir";
-// ✅ تغییر یافته: FormSubmit به جای Formspree
-const formEndpoint = "https://formsubmit.co/el/rajuca";
+// ✅ Web3Forms - بدون محدودیت ۵۰ پیام
+const formEndpoint = "https://api.web3forms.com/submit";
+const web3formsKey = "0d967179-7470-4968-b994-eff822bcf23d";
 const currentYear = new Date().getFullYear();
 
 const pageData = {
@@ -493,11 +494,11 @@ const personSchema = {
         <h2 style="font-size:22px; font-weight:800; margin:0 0 6px 0;">📋 ارسال سوال دامپزشکی</h2>
         <p style="font-size:14.5px; opacity:0.88; margin-bottom:22px;">سوال خود را بپرسید تا در اسرع وقت پاسخ دهید.</p>
         <form id="consult-form" action={formEndpoint} method="POST" novalidate>
-          <!-- ✅ فیلدهای مخفی FormSubmit -->
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_subject" value="سوال جدید دامپزشکی از سایت" />
-          <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="_language" value="fa" />
+          <!-- ✅ فیلدهای مخفی Web3Forms -->
+          <input type="hidden" name="access_key" value={web3formsKey} />
+          <input type="hidden" name="subject" value="سوال جدید دامپزشکی از سایت" />
+          <input type="hidden" name="from_name" value="سایت دکتر جعفری" />
+          <input type="hidden" name="botcheck" value="" />
 
           <div class="form-group">
             <label for="f-name">نام و نام خانوادگی</label>
@@ -536,7 +537,6 @@ const personSchema = {
             <label for="f-message">سوال شما</label>
             <textarea id="f-message" name="message" placeholder="سوال خود را بنویسید..." required></textarea>
           </div>
-          <input type="text" name="_gotcha" style="display:none !important;" tabindex="-1" autocomplete="off" />
           <button type="submit" class="btn-submit">🚀 ارسال سوال</button>
         </form>
         <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
@@ -597,14 +597,13 @@ const personSchema = {
         try {
           const res = await fetch(form.action, {
             method: 'POST',
-            headers: { Accept: 'application/json' },
             body: new FormData(form),
           });
 
-          // FormSubmit در حالت AJAX پاسخ JSON برمی‌گرداند
+          // Web3Forms پاسخ JSON برمی‌گرداند
           const data = await res.json().catch(() => ({}));
 
-          if (res.ok && data.success !== false) {
+          if (res.ok && data.success) {
             statusDiv.className = 'form-status success';
             statusDiv.textContent = '✅ سوال شما با موفقیت ارسال شد! به‌زودی پاسخ داده می‌شود.';
             btn.innerHTML = '✅ ارسال شد!';
